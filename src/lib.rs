@@ -96,9 +96,10 @@
 #![no_std]
 
 #[cfg(feature = "serde")]
-use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
+use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
 
 pub mod checkers;
+mod float_compat;
 mod float_impl;
 pub mod types;
 
