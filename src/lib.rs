@@ -99,7 +99,6 @@
 use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
 
 pub mod checkers;
-mod float_compat;
 mod float_impl;
 pub mod types;
 

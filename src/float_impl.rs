@@ -144,165 +144,135 @@ impl<C: FloatChecker<f64>> Hash for NoisyFloat<f64, C> {
 
 // TODO why is `impl<F: Float + Hash, C: FloatChecker<F>> Hash for NoisyFloat<F, C>` considered conflicting?
 
-impl<F: Float, C: FloatChecker<F>> Add<F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn add(self, rhs: F) -> Self {
-        Self::new(self.value.add(rhs))
-    }
+macro_rules! op_impl {
+    (
+        ($($gentp:tt)*), $trid:ident, ($ltp:ty, $rtp:ty),
+        $fnid:ident ($sf:ident, $other:ident : $othtp:ty) -> $outtp:ty $fnbd:block
+    ) => (
+        impl<$($gentp)*> $trid<$rtp> for $ltp {
+            type Output = $outtp;
+            #[inline]
+            fn $fnid($sf, $other: $othtp) -> Self::Output $fnbd
+        }
+        impl<'a, $($gentp)*> $trid<$rtp> for &'a $ltp {
+            type Output = $outtp;
+            #[inline]
+            fn $fnid($sf, $other: $othtp) -> Self::Output $fnbd
+        }
+        impl<'a, $($gentp)*> $trid<&'a $rtp> for $ltp {
+            type Output = $outtp;
+            #[inline]
+            fn $fnid($sf, &$other: &'a $othtp) -> Self::Output $fnbd
+        }
+        impl<'a, 'b, $($gentp)*> $trid<&'b $rtp> for &'a $ltp {
+            type Output = $outtp;
+            #[inline]
+            fn $fnid($sf, &$other: &'b $othtp) -> Self::Output $fnbd
+        }
+    );
 }
 
-impl<'a, F: Float, C: FloatChecker<F>> Add<&'a F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn add(self, rhs: &'a F) -> Self {
-        Self::new(self.value.add(*rhs))
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Add, (NoisyFloat<F, C>, F),
+    add(self, rhs: F) -> NoisyFloat<F, C> {
+        NoisyFloat::new(self.value.add(rhs))
     }
-}
-
-impl<F: Float, C: FloatChecker<F>> Add for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn add(self, rhs: Self) -> Self {
+);
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Add, (NoisyFloat<F, C>, NoisyFloat<F, C>),
+    add(self, rhs: NoisyFloat<F, C>) -> NoisyFloat<F, C> {
         self.add(rhs.value)
     }
-}
+);
 
-impl<'a, F: Float, C: FloatChecker<F>> Add<&'a Self> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn add(self, rhs: &'a Self) -> Self {
-        self.add(rhs.value)
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Sub, (NoisyFloat<F, C>, F),
+    sub(self, rhs: F) -> NoisyFloat<F, C> {
+        NoisyFloat::new(self.value.sub(rhs))
     }
-}
-
-impl<F: Float, C: FloatChecker<F>> Sub<F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn sub(self, rhs: F) -> Self {
-        Self::new(self.value.sub(rhs))
-    }
-}
-
-impl<'a, F: Float, C: FloatChecker<F>> Sub<&'a F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn sub(self, rhs: &'a F) -> Self {
-        Self::new(self.value.sub(*rhs))
-    }
-}
-
-impl<F: Float, C: FloatChecker<F>> Sub for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn sub(self, rhs: Self) -> Self {
+);
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Sub, (NoisyFloat<F, C>, NoisyFloat<F, C>),
+    sub(self, rhs: NoisyFloat<F, C>) -> NoisyFloat<F, C> {
         self.sub(rhs.value)
     }
-}
+);
 
-impl<'a, F: Float, C: FloatChecker<F>> Sub<&'a Self> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn sub(self, rhs: &'a Self) -> Self {
-        self.sub(rhs.value)
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Mul, (NoisyFloat<F, C>, F),
+    mul(self, rhs: F) -> NoisyFloat<F, C> {
+        NoisyFloat::new(self.value.mul(rhs))
     }
-}
-
-impl<F: Float, C: FloatChecker<F>> Mul<F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn mul(self, rhs: F) -> Self {
-        Self::new(self.value.mul(rhs))
-    }
-}
-
-impl<'a, F: Float, C: FloatChecker<F>> Mul<&'a F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn mul(self, rhs: &'a F) -> Self {
-        Self::new(self.value.mul(*rhs))
-    }
-}
-
-impl<F: Float, C: FloatChecker<F>> Mul for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn mul(self, rhs: Self) -> Self {
+);
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Mul, (NoisyFloat<F, C>, NoisyFloat<F, C>),
+    mul(self, rhs: NoisyFloat<F, C>) -> NoisyFloat<F, C> {
         self.mul(rhs.value)
     }
-}
+);
 
-impl<'a, F: Float, C: FloatChecker<F>> Mul<&'a Self> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn mul(self, rhs: &'a Self) -> Self {
-        self.mul(rhs.value)
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Div, (NoisyFloat<F, C>, F),
+    div(self, rhs: F) -> NoisyFloat<F, C> {
+        NoisyFloat::new(self.value.div(rhs))
     }
-}
-
-impl<F: Float, C: FloatChecker<F>> Div<F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn div(self, rhs: F) -> Self {
-        Self::new(self.value.div(rhs))
-    }
-}
-
-impl<'a, F: Float, C: FloatChecker<F>> Div<&'a F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn div(self, rhs: &'a F) -> Self {
-        Self::new(self.value.div(*rhs))
-    }
-}
-
-impl<F: Float, C: FloatChecker<F>> Div for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn div(self, rhs: Self) -> Self {
+);
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Div, (NoisyFloat<F, C>, NoisyFloat<F, C>),
+    div(self, rhs: NoisyFloat<F, C>) -> NoisyFloat<F, C> {
         self.div(rhs.value)
     }
-}
+);
 
-impl<'a, F: Float, C: FloatChecker<F>> Div<&'a Self> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn div(self, rhs: &'a Self) -> Self {
-        self.div(rhs.value)
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Rem, (NoisyFloat<F, C>, F),
+    rem(self, rhs: F) -> NoisyFloat<F, C> {
+        NoisyFloat::new(self.value.rem(rhs))
     }
-}
-
-impl<F: Float, C: FloatChecker<F>> Rem<F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn rem(self, rhs: F) -> Self {
-        Self::new(self.value.rem(rhs))
-    }
-}
-
-impl<'a, F: Float, C: FloatChecker<F>> Rem<&'a F> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn rem(self, rhs: &'a F) -> Self {
-        Self::new(self.value.rem(*rhs))
-    }
-}
-
-impl<F: Float, C: FloatChecker<F>> Rem for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn rem(self, rhs: Self) -> Self {
+);
+op_impl!(
+    (F: Float, C: FloatChecker<F>), Rem, (NoisyFloat<F, C>, NoisyFloat<F, C>),
+    rem(self, rhs: NoisyFloat<F, C>) -> NoisyFloat<F, C> {
         self.rem(rhs.value)
     }
-}
+);
 
-impl<'a, F: Float, C: FloatChecker<F>> Rem<&'a Self> for NoisyFloat<F, C> {
-    type Output = Self;
-    #[inline]
-    fn rem(self, rhs: &'a Self) -> Self {
-        self.rem(rhs.value)
-    }
+macro_rules! float_left_op_impls {
+    ($ftp:ty) => {
+        op_impl!(
+            (C: FloatChecker<$ftp>), Add, ($ftp, NoisyFloat<$ftp, C>),
+            add(self, rhs: NoisyFloat<$ftp, C>) -> NoisyFloat<$ftp, C> {
+                NoisyFloat::new(self.add(rhs.value))
+            }
+        );
+        op_impl!(
+            (C: FloatChecker<$ftp>), Sub, ($ftp, NoisyFloat<$ftp, C>),
+            sub(self, rhs: NoisyFloat<$ftp, C>) -> NoisyFloat<$ftp, C> {
+                NoisyFloat::new(self.sub(rhs.value))
+            }
+        );
+        op_impl!(
+            (C: FloatChecker<$ftp>), Mul, ($ftp, NoisyFloat<$ftp, C>),
+            mul(self, rhs: NoisyFloat<$ftp, C>) -> NoisyFloat<$ftp, C> {
+                NoisyFloat::new(self.mul(rhs.value))
+            }
+        );
+        op_impl!(
+            (C: FloatChecker<$ftp>), Div, ($ftp, NoisyFloat<$ftp, C>),
+            div(self, rhs: NoisyFloat<$ftp, C>) -> NoisyFloat<$ftp, C> {
+                NoisyFloat::new(self.div(rhs.value))
+            }
+        );
+        op_impl!(
+            (C: FloatChecker<$ftp>), Rem, ($ftp, NoisyFloat<$ftp, C>),
+            rem(self, rhs: NoisyFloat<$ftp, C>) -> NoisyFloat<$ftp, C> {
+                NoisyFloat::new(self.rem(rhs.value))
+            }
+        );
+    };
 }
+float_left_op_impls!(f32);
+float_left_op_impls!(f64);
 
 impl<F: Float + AddAssign, C: FloatChecker<F>> AddAssign<F> for NoisyFloat<F, C> {
     #[inline]
