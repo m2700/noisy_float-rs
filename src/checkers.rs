@@ -14,6 +14,8 @@
 
 //! Standard implementations of `FloatChecker`.
 
+use core::convert::TryFrom;
+
 use crate::{FloatChecker, NoisyFloat};
 use num_traits::Float;
 
@@ -56,7 +58,16 @@ impl<F: Float> FloatChecker<F> for FiniteChecker {
 }
 
 impl<F: Float> From<NoisyFloat<F, FiniteChecker>> for NoisyFloat<F, NumChecker> {
+    #[inline]
     fn from(value: NoisyFloat<F, FiniteChecker>) -> Self {
         Self::unchecked_new_generic(value.raw())
+    }
+}
+
+impl<F: Float> TryFrom<NoisyFloat<F, NumChecker>> for NoisyFloat<F, FiniteChecker> {
+    type Error = &'static str;
+    #[inline]
+    fn try_from(f: NoisyFloat<F, NumChecker>) -> Result<Self, Self::Error> {
+        Self::try_new(f.value).ok_or("illegal value")
     }
 }
