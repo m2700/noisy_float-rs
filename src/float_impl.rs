@@ -151,21 +151,25 @@ macro_rules! op_impl {
     ) => (
         impl<$($gentp)*> $trid<$rtp> for $ltp {
             type Output = $outtp;
+            #[track_caller]
             #[inline]
             fn $fnid($sf, $other: $othtp) -> Self::Output $fnbd
         }
         impl<'a, $($gentp)*> $trid<$rtp> for &'a $ltp {
             type Output = $outtp;
+            #[track_caller]
             #[inline]
             fn $fnid($sf, $other: $othtp) -> Self::Output $fnbd
         }
         impl<'a, $($gentp)*> $trid<&'a $rtp> for $ltp {
             type Output = $outtp;
+            #[track_caller]
             #[inline]
             fn $fnid($sf, &$other: &'a $othtp) -> Self::Output $fnbd
         }
         impl<'a, 'b, $($gentp)*> $trid<&'b $rtp> for &'a $ltp {
             type Output = $outtp;
+            #[track_caller]
             #[inline]
             fn $fnid($sf, &$other: &'b $othtp) -> Self::Output $fnbd
         }
@@ -275,6 +279,7 @@ float_left_op_impls!(f32);
 float_left_op_impls!(f64);
 
 impl<F: Float + AddAssign, C: FloatChecker<F>> AddAssign<F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn add_assign(&mut self, rhs: F) {
         self.value.add_assign(rhs);
@@ -283,6 +288,7 @@ impl<F: Float + AddAssign, C: FloatChecker<F>> AddAssign<F> for NoisyFloat<F, C>
 }
 
 impl<'a, F: Float + AddAssign, C: FloatChecker<F>> AddAssign<&'a F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn add_assign(&mut self, rhs: &'a F) {
         self.value.add_assign(*rhs);
@@ -291,6 +297,7 @@ impl<'a, F: Float + AddAssign, C: FloatChecker<F>> AddAssign<&'a F> for NoisyFlo
 }
 
 impl<F: Float + AddAssign, C: FloatChecker<F>> AddAssign for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn add_assign(&mut self, rhs: Self) {
         self.add_assign(rhs.value);
@@ -298,6 +305,7 @@ impl<F: Float + AddAssign, C: FloatChecker<F>> AddAssign for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float + AddAssign, C: FloatChecker<F>> AddAssign<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn add_assign(&mut self, rhs: &'a Self) {
         self.add_assign(rhs.value);
@@ -305,6 +313,7 @@ impl<'a, F: Float + AddAssign, C: FloatChecker<F>> AddAssign<&'a Self> for Noisy
 }
 
 impl<F: Float + SubAssign, C: FloatChecker<F>> SubAssign<F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn sub_assign(&mut self, rhs: F) {
         self.value.sub_assign(rhs);
@@ -313,6 +322,7 @@ impl<F: Float + SubAssign, C: FloatChecker<F>> SubAssign<F> for NoisyFloat<F, C>
 }
 
 impl<'a, F: Float + SubAssign, C: FloatChecker<F>> SubAssign<&'a F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn sub_assign(&mut self, rhs: &'a F) {
         self.value.sub_assign(*rhs);
@@ -321,6 +331,7 @@ impl<'a, F: Float + SubAssign, C: FloatChecker<F>> SubAssign<&'a F> for NoisyFlo
 }
 
 impl<F: Float + SubAssign, C: FloatChecker<F>> SubAssign for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn sub_assign(&mut self, rhs: Self) {
         self.sub_assign(rhs.value);
@@ -328,6 +339,7 @@ impl<F: Float + SubAssign, C: FloatChecker<F>> SubAssign for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float + SubAssign, C: FloatChecker<F>> SubAssign<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn sub_assign(&mut self, rhs: &'a Self) {
         self.sub_assign(rhs.value);
@@ -335,6 +347,7 @@ impl<'a, F: Float + SubAssign, C: FloatChecker<F>> SubAssign<&'a Self> for Noisy
 }
 
 impl<F: Float + MulAssign, C: FloatChecker<F>> MulAssign<F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn mul_assign(&mut self, rhs: F) {
         self.value.mul_assign(rhs);
@@ -343,6 +356,7 @@ impl<F: Float + MulAssign, C: FloatChecker<F>> MulAssign<F> for NoisyFloat<F, C>
 }
 
 impl<'a, F: Float + MulAssign, C: FloatChecker<F>> MulAssign<&'a F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn mul_assign(&mut self, rhs: &'a F) {
         self.value.mul_assign(*rhs);
@@ -351,6 +365,7 @@ impl<'a, F: Float + MulAssign, C: FloatChecker<F>> MulAssign<&'a F> for NoisyFlo
 }
 
 impl<F: Float + MulAssign, C: FloatChecker<F>> MulAssign for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn mul_assign(&mut self, rhs: Self) {
         self.mul_assign(rhs.value);
@@ -358,6 +373,7 @@ impl<F: Float + MulAssign, C: FloatChecker<F>> MulAssign for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float + MulAssign, C: FloatChecker<F>> MulAssign<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn mul_assign(&mut self, rhs: &'a Self) {
         self.mul_assign(rhs.value);
@@ -365,6 +381,7 @@ impl<'a, F: Float + MulAssign, C: FloatChecker<F>> MulAssign<&'a Self> for Noisy
 }
 
 impl<F: Float + DivAssign, C: FloatChecker<F>> DivAssign<F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn div_assign(&mut self, rhs: F) {
         self.value.div_assign(rhs);
@@ -373,6 +390,7 @@ impl<F: Float + DivAssign, C: FloatChecker<F>> DivAssign<F> for NoisyFloat<F, C>
 }
 
 impl<'a, F: Float + DivAssign, C: FloatChecker<F>> DivAssign<&'a F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn div_assign(&mut self, rhs: &'a F) {
         self.value.div_assign(*rhs);
@@ -381,6 +399,7 @@ impl<'a, F: Float + DivAssign, C: FloatChecker<F>> DivAssign<&'a F> for NoisyFlo
 }
 
 impl<F: Float + DivAssign, C: FloatChecker<F>> DivAssign for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn div_assign(&mut self, rhs: Self) {
         self.div_assign(rhs.value);
@@ -388,6 +407,7 @@ impl<F: Float + DivAssign, C: FloatChecker<F>> DivAssign for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float + DivAssign, C: FloatChecker<F>> DivAssign<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn div_assign(&mut self, rhs: &'a Self) {
         self.div_assign(rhs.value);
@@ -395,6 +415,7 @@ impl<'a, F: Float + DivAssign, C: FloatChecker<F>> DivAssign<&'a Self> for Noisy
 }
 
 impl<F: Float + RemAssign, C: FloatChecker<F>> RemAssign<F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn rem_assign(&mut self, rhs: F) {
         self.value.rem_assign(rhs);
@@ -403,6 +424,7 @@ impl<F: Float + RemAssign, C: FloatChecker<F>> RemAssign<F> for NoisyFloat<F, C>
 }
 
 impl<'a, F: Float + RemAssign, C: FloatChecker<F>> RemAssign<&'a F> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn rem_assign(&mut self, rhs: &'a F) {
         self.value.rem_assign(*rhs);
@@ -411,6 +433,7 @@ impl<'a, F: Float + RemAssign, C: FloatChecker<F>> RemAssign<&'a F> for NoisyFlo
 }
 
 impl<F: Float + RemAssign, C: FloatChecker<F>> RemAssign for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn rem_assign(&mut self, rhs: Self) {
         self.rem_assign(rhs.value);
@@ -418,6 +441,7 @@ impl<F: Float + RemAssign, C: FloatChecker<F>> RemAssign for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float + RemAssign, C: FloatChecker<F>> RemAssign<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn rem_assign(&mut self, rhs: &'a Self) {
         self.rem_assign(rhs.value);
@@ -426,6 +450,7 @@ impl<'a, F: Float + RemAssign, C: FloatChecker<F>> RemAssign<&'a Self> for Noisy
 
 impl<F: Float, C: FloatChecker<F>> Neg for NoisyFloat<F, C> {
     type Output = Self;
+    #[track_caller]
     #[inline]
     fn neg(self) -> Self {
         Self::new(self.value.neg())
@@ -434,6 +459,7 @@ impl<F: Float, C: FloatChecker<F>> Neg for NoisyFloat<F, C> {
 
 impl<'a, F: Float, C: FloatChecker<F>> Neg for &'a NoisyFloat<F, C> {
     type Output = NoisyFloat<F, C>;
+    #[track_caller]
     #[inline]
     fn neg(self) -> Self::Output {
         Self::Output::neg(*self)
@@ -460,6 +486,7 @@ impl<F: Float, C: FloatChecker<F>> One for NoisyFloat<F, C> {
 
 impl<F: Float, C: FloatChecker<F>> Num for NoisyFloat<F, C> {
     type FromStrRadixErr = F::FromStrRadixErr;
+    #[track_caller]
     #[inline]
     fn from_str_radix(str: &str, radix: u32) -> Result<Self, Self::FromStrRadixErr> {
         F::from_str_radix(str, radix).map(|v| Self::new(v))
@@ -621,231 +648,288 @@ impl<C: FloatChecker<f32>> TryFrom<f32> for NoisyFloat<f32, C> {
 }
 
 impl<F: Float, C: FloatChecker<F>> Float for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn nan() -> Self {
         panic!("unexpected NaN")
     }
+    #[track_caller]
     #[inline]
     fn infinity() -> Self {
         Self::new(F::infinity())
     }
+    #[track_caller]
     #[inline]
     fn neg_infinity() -> Self {
         Self::new(F::neg_infinity())
     }
+    #[track_caller]
     #[inline]
     fn neg_zero() -> Self {
         Self::new(F::neg_zero())
     }
+    #[track_caller]
     #[inline]
     fn min_value() -> Self {
         Self::new(F::min_value())
     }
+    #[track_caller]
     #[inline]
     fn min_positive_value() -> Self {
         Self::new(F::min_positive_value())
     }
+    #[track_caller]
     #[inline]
     fn max_value() -> Self {
         Self::new(F::max_value())
     }
+    #[track_caller]
     #[inline]
     fn is_nan(self) -> bool {
         self.value.is_nan()
     }
+    #[track_caller]
     #[inline]
     fn is_infinite(self) -> bool {
         self.value.is_infinite()
     }
+    #[track_caller]
     #[inline]
     fn is_finite(self) -> bool {
         self.value.is_finite()
     }
+    #[track_caller]
     #[inline]
     fn is_normal(self) -> bool {
         self.value.is_normal()
     }
+    #[track_caller]
     #[inline]
     fn classify(self) -> FpCategory {
         self.value.classify()
     }
+    #[track_caller]
     #[inline]
     fn floor(self) -> Self {
         Self::new(self.value.floor())
     }
+    #[track_caller]
     #[inline]
     fn ceil(self) -> Self {
         Self::new(self.value.ceil())
     }
+    #[track_caller]
     #[inline]
     fn round(self) -> Self {
         Self::new(self.value.round())
     }
+    #[track_caller]
     #[inline]
     fn trunc(self) -> Self {
         Self::new(self.value.trunc())
     }
+    #[track_caller]
     #[inline]
     fn fract(self) -> Self {
         Self::new(self.value.fract())
     }
+    #[track_caller]
     #[inline]
     fn abs(self) -> Self {
         Self::new(self.value.abs())
     }
+    #[track_caller]
     #[inline]
     fn signum(self) -> Self {
         Self::new(self.value.signum())
     }
+    #[track_caller]
     #[inline]
     fn is_sign_positive(self) -> bool {
         self.value.is_sign_positive()
     }
+    #[track_caller]
     #[inline]
     fn is_sign_negative(self) -> bool {
         self.value.is_sign_negative()
     }
+    #[track_caller]
     #[inline]
     fn mul_add(self, a: Self, b: Self) -> Self {
         Self::new(self.value.mul_add(a.value, b.value))
     }
+    #[track_caller]
     #[inline]
     fn recip(self) -> Self {
         Self::new(self.value.recip())
     }
+    #[track_caller]
     #[inline]
     fn powi(self, n: i32) -> Self {
         Self::new(self.value.powi(n))
     }
+    #[track_caller]
     #[inline]
     fn powf(self, n: Self) -> Self {
         Self::new(self.value.powf(n.value))
     }
+    #[track_caller]
     #[inline]
     fn sqrt(self) -> Self {
         Self::new(self.value.sqrt())
     }
+    #[track_caller]
     #[inline]
     fn exp(self) -> Self {
         Self::new(self.value.exp())
     }
+    #[track_caller]
     #[inline]
     fn exp2(self) -> Self {
         Self::new(self.value.exp2())
     }
+    #[track_caller]
     #[inline]
     fn ln(self) -> Self {
         Self::new(self.value.ln())
     }
+    #[track_caller]
     #[inline]
     fn log(self, base: Self) -> Self {
         Self::new(self.value.log(base.value))
     }
+    #[track_caller]
     #[inline]
     fn log2(self) -> Self {
         Self::new(self.value.log2())
     }
+    #[track_caller]
     #[inline]
     fn log10(self) -> Self {
         Self::new(self.value.log10())
     }
+    #[track_caller]
     #[inline]
     fn max(self, other: Self) -> Self {
         Self::new(self.value.max(other.value))
     }
+    #[track_caller]
     #[inline]
     fn min(self, other: Self) -> Self {
         Self::new(self.value.min(other.value))
     }
+    #[track_caller]
     #[inline]
     fn abs_sub(self, other: Self) -> Self {
         Self::new(self.value.abs_sub(other.value))
     }
+    #[track_caller]
     #[inline]
     fn cbrt(self) -> Self {
         Self::new(self.value.cbrt())
     }
+    #[track_caller]
     #[inline]
     fn hypot(self, other: Self) -> Self {
         Self::new(self.value.hypot(other.value))
     }
+    #[track_caller]
     #[inline]
     fn sin(self) -> Self {
         Self::new(self.value.sin())
     }
+    #[track_caller]
     #[inline]
     fn cos(self) -> Self {
         Self::new(self.value.cos())
     }
+    #[track_caller]
     #[inline]
     fn tan(self) -> Self {
         Self::new(self.value.tan())
     }
+    #[track_caller]
     #[inline]
     fn asin(self) -> Self {
         Self::new(self.value.asin())
     }
+    #[track_caller]
     #[inline]
     fn acos(self) -> Self {
         Self::new(self.value.acos())
     }
+    #[track_caller]
     #[inline]
     fn atan(self) -> Self {
         Self::new(self.value.atan())
     }
+    #[track_caller]
     #[inline]
     fn atan2(self, other: Self) -> Self {
         Self::new(self.value.atan2(other.value))
     }
+    #[track_caller]
     #[inline]
     fn sin_cos(self) -> (Self, Self) {
         let (a, b) = self.value.sin_cos();
         (Self::new(a), Self::new(b))
     }
+    #[track_caller]
     #[inline]
     fn exp_m1(self) -> Self {
         Self::new(self.value.exp_m1())
     }
+    #[track_caller]
     #[inline]
     fn ln_1p(self) -> Self {
         Self::new(self.value.ln_1p())
     }
+    #[track_caller]
     #[inline]
     fn sinh(self) -> Self {
         Self::new(self.value.sinh())
     }
+    #[track_caller]
     #[inline]
     fn cosh(self) -> Self {
         Self::new(self.value.cosh())
     }
+    #[track_caller]
     #[inline]
     fn tanh(self) -> Self {
         Self::new(self.value.tanh())
     }
+    #[track_caller]
     #[inline]
     fn asinh(self) -> Self {
         Self::new(self.value.asinh())
     }
+    #[track_caller]
     #[inline]
     fn acosh(self) -> Self {
         Self::new(self.value.acosh())
     }
+    #[track_caller]
     #[inline]
     fn atanh(self) -> Self {
         Self::new(self.value.atanh())
     }
+    #[track_caller]
     #[inline]
     fn integer_decode(self) -> (u64, i16, i8) {
         self.value.integer_decode()
     }
+    #[track_caller]
     #[inline]
     fn epsilon() -> Self {
         Self::new(F::epsilon())
     }
+    #[track_caller]
     #[inline]
     fn to_degrees(self) -> Self {
         Self::new(self.value.to_degrees())
     }
+    #[track_caller]
     #[inline]
     fn to_radians(self) -> Self {
         Self::new(self.value.to_radians())
@@ -920,22 +1004,27 @@ impl<F: Float + FloatConst, C: FloatChecker<F>> FloatConst for NoisyFloat<F, C> 
 }
 
 impl<F: Float + Signed, C: FloatChecker<F>> Signed for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn abs(&self) -> Self {
         Self::new(self.value.abs())
     }
+    #[track_caller]
     #[inline]
     fn abs_sub(&self, other: &Self) -> Self {
         Self::new(self.value.abs_sub(other.value))
     }
+    #[track_caller]
     #[inline]
     fn signum(&self) -> Self {
         Self::new(self.value.signum())
     }
+    #[track_caller]
     #[inline]
     fn is_positive(&self) -> bool {
         self.value.is_positive()
     }
+    #[track_caller]
     #[inline]
     fn is_negative(&self) -> bool {
         self.value.is_negative()
@@ -943,10 +1032,12 @@ impl<F: Float + Signed, C: FloatChecker<F>> Signed for NoisyFloat<F, C> {
 }
 
 impl<F: Float + Bounded, C: FloatChecker<F>> Bounded for NoisyFloat<F, C> {
+    #[track_caller]
     #[inline]
     fn min_value() -> Self {
         Self::new(Float::min_value())
     }
+    #[track_caller]
     #[inline]
     fn max_value() -> Self {
         Self::new(Float::max_value())
@@ -954,6 +1045,7 @@ impl<F: Float + Bounded, C: FloatChecker<F>> Bounded for NoisyFloat<F, C> {
 }
 
 impl<F: Float, C: FloatChecker<F>> iter::Sum for NoisyFloat<F, C> {
+    #[track_caller]
     fn sum<I>(iter: I) -> Self
     where
         I: Iterator<Item = Self>,
@@ -963,6 +1055,7 @@ impl<F: Float, C: FloatChecker<F>> iter::Sum for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float, C: FloatChecker<F>> iter::Sum<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     fn sum<I>(iter: I) -> Self
     where
         I: Iterator<Item = &'a Self>,
@@ -972,6 +1065,7 @@ impl<'a, F: Float, C: FloatChecker<F>> iter::Sum<&'a Self> for NoisyFloat<F, C> 
 }
 
 impl<F: Float, C: FloatChecker<F>> iter::Product for NoisyFloat<F, C> {
+    #[track_caller]
     fn product<I>(iter: I) -> Self
     where
         I: Iterator<Item = Self>,
@@ -981,6 +1075,7 @@ impl<F: Float, C: FloatChecker<F>> iter::Product for NoisyFloat<F, C> {
 }
 
 impl<'a, F: Float, C: FloatChecker<F>> iter::Product<&'a Self> for NoisyFloat<F, C> {
+    #[track_caller]
     fn product<I>(iter: I) -> Self
     where
         I: Iterator<Item = &'a Self>,

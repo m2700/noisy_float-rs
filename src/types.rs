@@ -49,24 +49,28 @@ pub type R32 = NoisyFloat<f32, FiniteChecker>;
 pub type R64 = NoisyFloat<f64, FiniteChecker>;
 
 /// Shorthand for `N32::new(value)`.
+#[track_caller]
 #[inline]
 pub fn n32(value: f32) -> N32 {
     N32::new(value)
 }
 
 /// Shorthand for `N64::new(value)`.
+#[track_caller]
 #[inline]
 pub fn n64(value: f64) -> N64 {
     N64::new(value)
 }
 
 /// Shorthand for `R32::new(value)`.
+#[track_caller]
 #[inline]
 pub fn r32(value: f32) -> R32 {
     R32::new(value)
 }
 
 /// Shorthand for `R64::new(value)`.
+#[track_caller]
 #[inline]
 pub fn r64(value: f64) -> R64 {
     R64::new(value)

@@ -159,6 +159,7 @@ impl<F: Float, C: FloatChecker<F>> NoisyFloat<F, C> {
     /// Constructs a `NoisyFloat` with the given value.
     ///
     /// Uses the `FloatChecker` to assert that the value is valid.
+    #[track_caller]
     #[inline]
     pub fn new(value: F) -> Self {
         C::assert(value);
@@ -191,6 +192,7 @@ impl<F: Float, C: FloatChecker<F>> NoisyFloat<F, C> {
     /// Converts the value in-place to a reference to a `NoisyFloat`.
     ///
     /// Uses the `FloatChecker` to assert that the value is valid.
+    #[track_caller]
     #[inline]
     pub fn borrowed(value: &F) -> &Self {
         C::assert(*value);
@@ -219,6 +221,7 @@ impl<F: Float, C: FloatChecker<F>> NoisyFloat<F, C> {
     /// Converts the value in-place to a mutable reference to a `NoisyFloat`.
     ///
     /// Uses the `FloatChecker` to assert that the value is valid.
+    #[track_caller]
     #[inline]
     pub fn borrowed_mut(value: &mut F) -> &mut Self {
         C::assert(*value);
@@ -259,6 +262,7 @@ impl<F: Float, C: FloatChecker<F>> NoisyFloat<F, C> {
     /// May panic not only by the `FloatChecker` but also
     /// by unwrapping the result of a `NumCast` invocation for type `F`,
     /// although the later should not occur in normal situations.
+    #[track_caller]
     #[inline]
     pub fn from_f64(value: f64) -> Self {
         Self::new(F::from(value).unwrap())
