@@ -243,6 +243,19 @@ op_impl!(
 
 macro_rules! float_left_op_impls {
     ($ftp:ty) => {
+        impl<C: FloatChecker<$ftp>> PartialEq<NoisyFloat<$ftp, C>> for $ftp {
+            #[inline]
+            fn eq(&self, other: &NoisyFloat<$ftp, C>) -> bool {
+                *self == other.value
+            }
+        }
+        impl<C: FloatChecker<$ftp>> PartialOrd<NoisyFloat<$ftp, C>> for $ftp {
+            #[inline]
+            fn partial_cmp(&self, other: &NoisyFloat<$ftp, C>) -> Option<Ordering> {
+                self.partial_cmp(&other.value)
+            }
+        }
+
         op_impl!(
             (C: FloatChecker<$ftp>), Add, ($ftp, NoisyFloat<$ftp, C>),
             add(self, rhs: NoisyFloat<$ftp, C>) -> NoisyFloat<$ftp, C> {
