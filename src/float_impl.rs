@@ -660,6 +660,27 @@ impl<C: FloatChecker<f32>> TryFrom<f32> for NoisyFloat<f32, C> {
     }
 }
 
+macro_rules! from_primitive {
+    ($it:ty, $ft:ty) => {
+        impl<C: FloatChecker<$ft>> From<$it> for NoisyFloat<$ft, C> {
+            #[inline]
+            fn from(i: $it) -> Self {
+                Self::new(i.into())
+            }
+        }
+    };
+}
+from_primitive!(u8, f32);
+from_primitive!(u16, f32);
+from_primitive!(i8, f32);
+from_primitive!(i16, f32);
+from_primitive!(u8, f64);
+from_primitive!(u16, f64);
+from_primitive!(u32, f64);
+from_primitive!(i8, f64);
+from_primitive!(i16, f64);
+from_primitive!(i32, f64);
+
 impl<F: Float, C: FloatChecker<F>> Float for NoisyFloat<F, C> {
     #[track_caller]
     #[inline]
