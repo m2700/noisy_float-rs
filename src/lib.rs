@@ -100,6 +100,8 @@ use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
 
 pub mod checkers;
 mod float_impl;
+#[cfg(feature = "proptest")]
+pub mod proptest;
 pub mod types;
 
 /// Prelude for the `noisy_float` crate.
