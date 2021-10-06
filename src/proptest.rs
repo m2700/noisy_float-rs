@@ -1,4 +1,4 @@
-use core::{fmt::Debug, marker::PhantomData};
+use core::{fmt::Debug, marker::PhantomData, ops::Range};
 
 use num_traits::Float;
 use proptest::{
@@ -31,9 +31,9 @@ impl<F, C> Debug for Any<F, C> {
     }
 }
 
-pub struct Tree<T, C>(T, PhantomData<C>);
-
-impl<T, C> ValueTree for Tree<T, C>
+// creating this tree is unsafe, there will be no further checks
+pub struct NoisyFloatValueTree<T, C>(T, PhantomData<C>);
+impl<T, C> ValueTree for NoisyFloatValueTree<T, C>
 where
     T: ValueTree,
     C: FloatChecker<T::Value>,
@@ -58,7 +58,7 @@ macro_rules! float_any_strategy_impls {
     ($ftp:ident) => {
         impl Strategy for Any<$ftp, NumChecker> {
             type Value = NoisyFloat<$ftp, NumChecker>;
-            type Tree = Tree<$ftp::BinarySearch, NumChecker>;
+            type Tree = NoisyFloatValueTree<$ftp::BinarySearch, NumChecker>;
             #[inline]
             fn new_tree(&self, runner: &mut TestRunner) -> NewTree<Self> {
                 ($ftp::INFINITE
@@ -68,12 +68,12 @@ macro_rules! float_any_strategy_impls {
                     | $ftp::SUBNORMAL
                     | $ftp::ZERO)
                     .new_tree(runner)
-                    .map(|t| Tree(t, PhantomData))
+                    .map(|t| NoisyFloatValueTree(t, PhantomData))
             }
         }
         impl Strategy for Any<$ftp, FiniteChecker> {
             type Value = NoisyFloat<$ftp, FiniteChecker>;
-            type Tree = Tree<$ftp::BinarySearch, FiniteChecker>;
+            type Tree = NoisyFloatValueTree<$ftp::BinarySearch, FiniteChecker>;
             #[inline]
             fn new_tree(&self, runner: &mut TestRunner) -> NewTree<Self> {
                 ($ftp::NEGATIVE
@@ -82,7 +82,7 @@ macro_rules! float_any_strategy_impls {
                     | $ftp::SUBNORMAL
                     | $ftp::ZERO)
                     .new_tree(runner)
-                    .map(|t| Tree(t, PhantomData))
+                    .map(|t| NoisyFloatValueTree(t, PhantomData))
             }
         }
     };
