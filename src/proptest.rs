@@ -1,4 +1,4 @@
-use core::{fmt::Debug, marker::PhantomData, ops::Range};
+use core::{fmt::Debug, marker::PhantomData};
 
 use num_traits::Float;
 use proptest::{
@@ -9,7 +9,10 @@ use proptest::{
     test_runner::TestRunner,
 };
 
-use crate::{FloatChecker, NoisyFloat, checkers::{FiniteChecker, NumChecker}};
+use crate::{
+    checkers::{FiniteChecker, NumChecker},
+    FloatChecker, NoisyFloat,
+};
 
 impl<F: Float, C: FloatChecker<F>> Arbitrary for NoisyFloat<F, C>
 where
@@ -76,11 +79,7 @@ macro_rules! float_any_strategy_impls {
             type Tree = NoisyFloatValueTree<$ftp::BinarySearch, FiniteChecker>;
             #[inline]
             fn new_tree(&self, runner: &mut TestRunner) -> NewTree<Self> {
-                ($ftp::NEGATIVE
-                    | $ftp::POSITIVE
-                    | $ftp::NORMAL
-                    | $ftp::SUBNORMAL
-                    | $ftp::ZERO)
+                ($ftp::NEGATIVE | $ftp::POSITIVE | $ftp::NORMAL | $ftp::SUBNORMAL | $ftp::ZERO)
                     .new_tree(runner)
                     .map(|t| NoisyFloatValueTree(t, PhantomData))
             }
